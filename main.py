@@ -147,12 +147,20 @@ def _(Poly, coefficient_bounds, polynomial_degree, symbols):
 
 
 @app.cell
-def _(mo, printing, q):
+def _(irreducible_polynomial, mo, printing, q):
     # Display q(x)
     mo.vstack(
         align="center",
         # Convert q(x) to LaTeX expression
-        items=[mo.md(rf"# $q(x) = {printing.latex(q)}$")],
+        items=[
+            mo.md(
+                rf"# <span style='color: green;'>$q(x) = {printing.latex(q)}$ </span>"
+            )
+            if irreducible_polynomial
+            else mo.md(
+                rf"# <span style='color: red;'>$q(x) = {printing.latex(q)}$ </span>"
+            )
+        ],
     )
     return
 
@@ -192,10 +200,18 @@ def _(coefficients, mo, primes):
     # Checks coefficients $a_i$ for $0 \leq i < n$
     for item in coefficients[1:]:
         if item % primes.value == 0:
-            divisible_list.append(mo.md(rf"## ${primes.value} \mid {item}$"))
+            divisible_list.append(
+                mo.md(
+                    rf"## <span style='color: green;'>${primes.value} \mid {item}$ </span>"
+                )
+            )
             divisible_counter += 1
         else:
-            divisible_list.append(mo.md(rf"## ${primes.value} \nmid {item}$"))
+            divisible_list.append(
+                mo.md(
+                    rf"## <span style='color: red;'>${primes.value} \nmid {item}$ </span>"
+                )
+            )
 
     # Since checking coefficients $a_i$ for $0 \leq i < n$, condition one is met if divisible_counter is equal to the number of coefficients - 1
     condition_one_met = divisible_counter == len(coefficients) - 1
@@ -203,13 +219,17 @@ def _(coefficients, mo, primes):
     condition_one_result = mo.vstack(
         align="center",
         items=[
-            mo.md(r"## $p$ divides each $a_i$ for $0 \leq i < n$")
-            if condition_one_met == False
-            else mo.md(r"## $p$ divides each $a_i$ for $0 \leq i < n$"),
+            mo.md(
+                r"## <span style='color: green;'>$p$ divides each $a_i$ for $0 \leq i < n$ </span>"
+            )
+            if condition_one_met
+            else mo.md(
+                r"## <span style='color: red;'>$p$ divides each $a_i$ for $0 \leq i < n$ </span>"
+            ),
             mo.vstack(divisible_list),
         ],
     )
-    return (condition_one_result,)
+    return condition_one_met, condition_one_result
 
 
 @app.cell
@@ -220,15 +240,23 @@ def _(coefficients, mo, primes):
     condition_two_result = mo.vstack(
         align="center",
         items=[
-            mo.md("## $p$ does not divide $a_n$")
+            mo.md(
+                "## <span style='color: green;'>$p$ does not divide $a_n$ </span>"
+            )
             if condition_two_met
-            else mo.md("## $p$ does not divide $a_n$"),
-            mo.md(rf"## ${primes.value} \nmid {coefficients[0]}$")
+            else mo.md(
+                "## <span style='color: red;'>$p$ does not divide $a_n$ </span>"
+            ),
+            mo.md(
+                rf"## <span style='color: green;'>${primes.value} \nmid {coefficients[0]}$ </span>"
+            )
             if condition_two_met
-            else mo.md(rf"## ${primes.value} \mid {coefficients[0]}$"),
+            else mo.md(
+                rf"## <span style='color: red;'>${primes.value} \mid {coefficients[0]}$ </span>"
+            ),
         ],
     )
-    return (condition_two_result,)
+    return condition_two_met, condition_two_result
 
 
 @app.cell
@@ -239,19 +267,23 @@ def _(coefficients, mo, primes):
     condition_three_result = mo.vstack(
         align="center",
         items=[
-            mo.md("## $p^2$ does not divide $a_0$")
-            if condition_three_met
-            else mo.md("## $p^2$ does not divide $a_0$"),
             mo.md(
-                rf"## ${pow(base=primes.value, exp=2)} \nmid {coefficients[-1]}$"
+                "## <span style='color: green;'>$p^2$ does not divide $a_0$ </span>"
             )
             if condition_three_met
             else mo.md(
-                rf"## ${pow(base=primes.value, exp=2)} \mid {coefficients[-1]}$"
+                "## <span style='color: red;'>$p^2$ does not divide $a_0$ </span>"
+            ),
+            mo.md(
+                rf"## <span style='color: green;'>${pow(base=primes.value, exp=2)} \nmid {coefficients[-1]}$ </span>"
+            )
+            if condition_three_met
+            else mo.md(
+                rf"## <span style='color: red;'>${pow(base=primes.value, exp=2)} \mid {coefficients[-1]}$ </span>"
             ),
         ],
     )
-    return (condition_three_result,)
+    return condition_three_met, condition_three_result
 
 
 @app.cell
@@ -261,6 +293,15 @@ def _(condition_one_result, condition_three_result, condition_two_result, mo):
         items=[condition_one_result, condition_two_result, condition_three_result],
     )
     return
+
+
+@app.cell
+def _(condition_one_met, condition_three_met, condition_two_met):
+    # Result
+    irreducible_polynomial = (
+        condition_one_met and condition_two_met and condition_three_met
+    )
+    return (irreducible_polynomial,)
 
 
 if __name__ == "__main__":
