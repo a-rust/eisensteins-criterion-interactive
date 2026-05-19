@@ -232,10 +232,33 @@ def _(coefficients, mo, primes):
 
 
 @app.cell
-def _(condition_one_result, condition_two_result, mo):
+def _(coefficients, mo, primes):
+    # Condition three: $p^2$ does not divide $a_0$
+    condition_three_met = coefficients[-1] % pow(base=primes.value, exp=2) != 0
+
+    condition_three_result = mo.vstack(
+        align="center",
+        items=[
+            mo.md("## $p^2$ does not divide $a_0$")
+            if condition_three_met
+            else mo.md("## $p^2$ does not divide $a_0$"),
+            mo.md(
+                rf"## ${pow(base=primes.value, exp=2)} \nmid {coefficients[-1]}$"
+            )
+            if condition_three_met
+            else mo.md(
+                rf"## ${pow(base=primes.value, exp=2)} \mid {coefficients[-1]}$"
+            ),
+        ],
+    )
+    return (condition_three_result,)
+
+
+@app.cell
+def _(condition_one_result, condition_three_result, condition_two_result, mo):
     mo.hstack(
         justify="space-between",
-        items=[condition_one_result, condition_two_result],
+        items=[condition_one_result, condition_two_result, condition_three_result],
     )
     return
 
