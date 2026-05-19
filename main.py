@@ -213,10 +213,29 @@ def _(coefficients, mo, primes):
 
 
 @app.cell
-def _(condition_one_result, mo):
+def _(coefficients, mo, primes):
+    # Condition two: $p$ does not divide $a_n$
+    condition_two_met = coefficients[0] % primes.value != 0
+
+    condition_two_result = mo.vstack(
+        align="center",
+        items=[
+            mo.md("## $p$ does not divide $a_n$")
+            if condition_two_met
+            else mo.md("## $p$ does not divide $a_n$"),
+            mo.md(rf"## ${primes.value} \nmid {coefficients[0]}$")
+            if condition_two_met
+            else mo.md(rf"## ${primes.value} \mid {coefficients[0]}$"),
+        ],
+    )
+    return (condition_two_result,)
+
+
+@app.cell
+def _(condition_one_result, condition_two_result, mo):
     mo.hstack(
         justify="space-between",
-        items=[condition_one_result],
+        items=[condition_one_result, condition_two_result],
     )
     return
 
