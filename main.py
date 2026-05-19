@@ -63,20 +63,35 @@ def _(mo):
 
 
 @app.cell
-def _(random):
-    # Parameters for randomly generated polynomial q(x) (coefficient bounds and degree)
-    random_coefficient_bounds = sorted([random.randint(-10, 10) for _ in range(2)])
-    polynomial_degree_value = random.randint(0, 3)
-    return polynomial_degree_value, random_coefficient_bounds
+def _(mo):
+    # Button to randomize user input values
+    randomize_button = mo.ui.run_button(label="Randomize")
+    return (randomize_button,)
 
 
 @app.cell
-def _(mo, polynomial_degree_value, random_coefficient_bounds):
+def _(random, randomize_button):
+    # Parameters for randomly generated polynomial q(x) (coefficient bounds and degree)
+    if randomize_button.value:
+        coefficient_bounds_value = sorted(
+            [random.randint(-10, 10) for _ in range(2)]
+        )
+        polynomial_degree_value = random.randint(0, 3)
+    else:
+        coefficient_bounds_value = sorted(
+            [random.randint(-10, 10) for _ in range(2)]
+        )
+        polynomial_degree_value = random.randint(0, 3)
+    return coefficient_bounds_value, polynomial_degree_value
+
+
+@app.cell
+def _(coefficient_bounds_value, mo, polynomial_degree_value):
     # User inputs (to update the parameters of q(x))
     coefficient_bounds = mo.ui.range_slider(
         start=-100,
         stop=100,
-        value=random_coefficient_bounds,
+        value=coefficient_bounds_value,
         label="Coefficient Bounds",
         show_value=True,
     )
@@ -119,11 +134,12 @@ def _(mo, printing, q):
 
 
 @app.cell
-def _(coefficient_bounds, mo, polynomial_degree):
+def _(coefficient_bounds, mo, polynomial_degree, randomize_button):
     user_inputs = mo.vstack(
         align="center",
         gap=1,
         items=[
+            randomize_button,
             coefficient_bounds,
             polynomial_degree,
         ],
