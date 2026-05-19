@@ -19,7 +19,7 @@ def _():
     from sympy import primerange, symbols, Poly, printing
     from sympy.core.random import _randint
 
-    return Poly, mo, printing, random, symbols
+    return Poly, mo, primerange, printing, random, symbols
 
 
 @app.cell
@@ -70,23 +70,40 @@ def _(mo):
 
 
 @app.cell
-def _(random, randomize_button):
+def _(primerange, random, randomize_button):
     # Parameters for randomly generated polynomial q(x) (coefficient bounds and degree)
+
+    # Range of prime numbers to check q(x) for irreducibility via Eisenstein's Criterion
+    primes_list = list(primerange(1, 101))
+
     if randomize_button.value:
         coefficient_bounds_value = sorted(
             [random.randint(-10, 10) for _ in range(2)]
         )
         polynomial_degree_value = random.randint(0, 3)
+        prime_value = random.choice(primes_list)
     else:
         coefficient_bounds_value = sorted(
             [random.randint(-10, 10) for _ in range(2)]
         )
         polynomial_degree_value = random.randint(0, 3)
-    return coefficient_bounds_value, polynomial_degree_value
+        prime_value = random.choice(primes_list)
+    return (
+        coefficient_bounds_value,
+        polynomial_degree_value,
+        prime_value,
+        primes_list,
+    )
 
 
 @app.cell
-def _(coefficient_bounds_value, mo, polynomial_degree_value):
+def _(
+    coefficient_bounds_value,
+    mo,
+    polynomial_degree_value,
+    prime_value,
+    primes_list,
+):
     # User inputs (to update the parameters of q(x))
     coefficient_bounds = mo.ui.range_slider(
         start=-100,
@@ -103,7 +120,14 @@ def _(coefficient_bounds_value, mo, polynomial_degree_value):
         value=polynomial_degree_value,
         show_value=True,
     )
-    return coefficient_bounds, polynomial_degree
+
+    primes = mo.ui.slider(
+        steps=primes_list,
+        label="p (Prime Number)",
+        value=prime_value,
+        show_value=True,
+    )
+    return coefficient_bounds, polynomial_degree, primes
 
 
 @app.cell
@@ -134,15 +158,11 @@ def _(mo, printing, q):
 
 
 @app.cell
-def _(coefficient_bounds, mo, polynomial_degree, randomize_button):
+def _(coefficient_bounds, mo, polynomial_degree, primes, randomize_button):
     user_inputs = mo.vstack(
         align="center",
         gap=1,
-        items=[
-            randomize_button,
-            coefficient_bounds,
-            polynomial_degree,
-        ],
+        items=[randomize_button, coefficient_bounds, polynomial_degree, primes],
     )
     return (user_inputs,)
 
