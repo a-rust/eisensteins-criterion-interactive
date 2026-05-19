@@ -78,13 +78,13 @@ def _(primerange, random, randomize_button):
 
     if randomize_button.value:
         coefficient_bounds_value = sorted(
-            [random.randint(-10, 10) for _ in range(2)]
+            [random.randint(-100, 100) for _ in range(2)]
         )
         polynomial_degree_value = random.randint(0, 3)
         prime_value = random.choice(primes_list)
     else:
         coefficient_bounds_value = sorted(
-            [random.randint(-10, 10) for _ in range(2)]
+            [random.randint(-100, 100) for _ in range(2)]
         )
         polynomial_degree_value = random.randint(0, 3)
         prime_value = random.choice(primes_list)
@@ -123,7 +123,7 @@ def _(
 
     primes = mo.ui.slider(
         steps=primes_list,
-        label="p (Prime Number)",
+        label="p",
         value=prime_value,
         show_value=True,
     )
