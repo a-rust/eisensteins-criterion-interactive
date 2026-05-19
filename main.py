@@ -65,10 +65,7 @@ def _(mo):
 @app.cell
 def _(random):
     # Parameters for randomly generated polynomial q(x) (coefficient bounds and degree)
-    random_coefficient_bounds = [
-        random.randint(-100, 100) for _ in range(2)
-    ].sort()
-
+    random_coefficient_bounds = sorted([random.randint(-10, 10) for _ in range(2)])
     polynomial_degree_value = random.randint(0, 3)
     return polynomial_degree_value, random_coefficient_bounds
 
@@ -81,6 +78,7 @@ def _(mo, polynomial_degree_value, random_coefficient_bounds):
         stop=100,
         value=random_coefficient_bounds,
         label="Coefficient Bounds",
+        show_value=True,
     )
 
     polynomial_degree = mo.ui.slider(
@@ -88,6 +86,7 @@ def _(mo, polynomial_degree_value, random_coefficient_bounds):
         stop=10,
         label="Degree",
         value=polynomial_degree_value,
+        show_value=True,
     )
     return coefficient_bounds, polynomial_degree
 
@@ -116,6 +115,25 @@ def _(mo, printing, q):
         # Convert q(x) to LaTeX expression
         items=[mo.md(rf"# $q(x) = {printing.latex(q)}$")],
     )
+    return
+
+
+@app.cell
+def _(coefficient_bounds, mo, polynomial_degree):
+    user_inputs = mo.vstack(
+        align="center",
+        gap=1,
+        items=[
+            coefficient_bounds,
+            polynomial_degree,
+        ],
+    )
+    return (user_inputs,)
+
+
+@app.cell
+def _(user_inputs):
+    user_inputs
     return
 
 
