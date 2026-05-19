@@ -143,7 +143,7 @@ def _(Poly, coefficient_bounds, polynomial_degree, symbols):
 
     # Define q(x)
     q = Poly(coefficients, symbols("x")).as_expr()
-    return (q,)
+    return coefficients, q
 
 
 @app.cell
@@ -170,6 +170,54 @@ def _(coefficient_bounds, mo, polynomial_degree, primes, randomize_button):
 @app.cell
 def _(user_inputs):
     user_inputs
+    return
+
+
+@app.cell
+def _(mo):
+    mo.vstack(align="center", items=[mo.md("# Conditions")])
+    return
+
+
+@app.cell
+def _(coefficients, mo, primes):
+    # Condition one: $p$ divides each $a_i$ for $0 \leq i < n$
+
+    # Counter to keep track of how many coefficients $p$ divides
+    divisible_counter = 0
+
+    # List for displaying whether or not $p$ divides $a_i$ for $0 \leq i < n$
+    divisible_list = []
+
+    # Checks coefficients $a_i$ for $0 \leq i < n$
+    for item in coefficients[1:]:
+        if item % primes.value == 0:
+            divisible_list.append(mo.md(rf"## ${primes.value} \mid {item}$"))
+            divisible_counter += 1
+        else:
+            divisible_list.append(mo.md(rf"## ${primes.value} \nmid {item}$"))
+
+    # Since checking coefficients $a_i$ for $0 \leq i < n$, condition one is met if divisible_counter is equal to the number of coefficients - 1
+    condition_one_met = divisible_counter == len(coefficients) - 1
+
+    condition_one_result = mo.vstack(
+        align="center",
+        items=[
+            mo.md(r"## $p$ divides each $a_i$ for $0 \leq i < n$")
+            if condition_one_met == False
+            else mo.md(r"## $p$ divides each $a_i$ for $0 \leq i < n$"),
+            mo.vstack(divisible_list),
+        ],
+    )
+    return (condition_one_result,)
+
+
+@app.cell
+def _(condition_one_result, mo):
+    mo.hstack(
+        justify="space-between",
+        items=[condition_one_result],
+    )
     return
 
 
