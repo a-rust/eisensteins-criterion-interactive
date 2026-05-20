@@ -80,13 +80,13 @@ def _(primerange, random, randomize_button):
         coefficient_bounds_value = sorted(
             [random.randint(-100, 100) for _ in range(2)]
         )
-        polynomial_degree_value = random.randint(0, 3)
+        polynomial_degree_value = random.randint(1, 3)
         prime_value = random.choice(primes_list)
     else:
         coefficient_bounds_value = sorted(
             [random.randint(-100, 100) for _ in range(2)]
         )
-        polynomial_degree_value = random.randint(0, 3)
+        polynomial_degree_value = random.randint(1, 3)
         prime_value = random.choice(primes_list)
     return (
         coefficient_bounds_value,
@@ -114,7 +114,8 @@ def _(
     )
 
     polynomial_degree = mo.ui.slider(
-        start=0,
+        # Not counting degree 0 polynomials
+        start=1,
         stop=10,
         label="Degree",
         value=polynomial_degree_value,
