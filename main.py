@@ -40,9 +40,9 @@ def _(mo):
             mo.md(
                 r"### $q(x)$ is irreducible over $\mathbb{Q}$ if there exists a prime number $p\in \mathbb{Z}$ such that all three conditions are met:"
             ),
-            mo.md("### $p$ divides each $a_i$ for $0 \leq i < n$"),
-            mo.md("### $p$ does not divide $a_n$"),
-            mo.md("### $p^2$ does not divide $a_0$"),
+            mo.md(r"### $p$ divides each $a_i$ for $0 \leq i < n$"),
+            mo.md(r"### $p$ does not divide $a_n$"),
+            mo.md(r"### $p^2$ does not divide $a_0$"),
         ],
     )
     return
