@@ -81,13 +81,13 @@ def _(primerange, random, randomize_button):
             [random.randint(-100, 100) for _ in range(2)]
         )
         polynomial_degree_value = random.randint(1, 3)
-        prime_value = random.choice(primes_list)
+        prime_value = random.choice(primes_list[:5])
     else:
         coefficient_bounds_value = sorted(
             [random.randint(-100, 100) for _ in range(2)]
         )
         polynomial_degree_value = random.randint(1, 3)
-        prime_value = random.choice(primes_list)
+        prime_value = random.choice(primes_list[:5])
     return (
         coefficient_bounds_value,
         polynomial_degree_value,
