@@ -12,3 +12,9 @@ Eisenstein's criterion states that $q(x)$ is irreducible over $\mathbb{Q}$ if th
 * $p$ divides each $a_i$ for $0 \leq i < n$
 * $p$ does not divide $a_n$
 * $p^2$ does not divide $a_0$
+
+---
+![Example 1](/examples/test-success.png)
+
+---
+![Example 2](/examples/test-fail.png)
