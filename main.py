@@ -58,7 +58,19 @@ def _(mo):
 
 @app.cell
 def _(mo):
-    mo.vstack(align="center", items=[mo.md("# Demo")])
+    mo.vstack(
+        align="center",
+        gap=1,
+        items=[
+            mo.md("# Randomly Generated Polynomial"),
+            mo.md(
+                r"## <span style='color: green;'>$q(x)$ </span> $\iff$ **all** conditions satisfied"
+            ),
+            mo.md(
+                r"## <span style='color: red;'>$q(x)$ </span> $\iff$ **at least one** condition failed"
+            ),
+        ],
+    )
     return
 
 
@@ -152,6 +164,7 @@ def _(irreducible_polynomial, mo, printing, q):
     # Display q(x)
     mo.vstack(
         align="center",
+        gap=1,
         # Convert q(x) to LaTeX expression
         items=[
             mo.md(
